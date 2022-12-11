@@ -23,7 +23,16 @@ func main() {
 		}
 		alert = os.Args[1]
 	}
-	janplib.Notifyf(1, time.Second*3, onload, alert)
+	cfg, err2 := janplib.LoadConfig()
+	if (err2 != nil) {
+		fmt.Println("Error loading cfg")
+		fmt.Println(err2)
+	}
+
+	monitor := int(cfg.XineramaHead);
+	notificationTime := int(cfg.NotificationTime);
+
+	janplib.Notifyf(uint32(monitor), time.Second*time.Duration(notificationTime), onload, alert)
 	fmt.Println("Test")
 	//go gtk.Main()
 }

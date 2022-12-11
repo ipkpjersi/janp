@@ -168,7 +168,8 @@ func (cfg *Config) HandleFileType(currentsitecfg *SiteConfig,
 
 func LoadConfig() (cfg *Config, err error) {
 	cfg = &Config{}
-	cfg.NotificationTime = 30
+	cfg.XineramaHead = 0
+	cfg.NotificationTime = 3
 	cfg.ClipboardTime = 5
 
 	exeFolder, err := GetExeDir()
