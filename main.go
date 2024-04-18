@@ -18,7 +18,7 @@ func main() {
 	var alert =  "Test alert"
 	if (len(os.Args) > 1) {
 		if (os.Args[1] == "-v" || os.Args[1] == "--version") {
-			fmt.Println("janp version 1.1")
+			fmt.Println("janp version 1.2")
 			return;
 		}
 		alert = os.Args[1]
