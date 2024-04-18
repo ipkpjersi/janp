@@ -141,10 +141,13 @@ func Notifyf(head uint32, expire time.Duration, onInit func(*gtk.Window),
 
 	// calculate notification position so that it doens't overlap other notifs
 	width, height := win.GetSize()
+	DebugPrintln(fmt.Sprintf("Window size: width = %d, height = %d", width, height))
 	var top_right = true
 	var y = 0
 	if top_right {
 		y = height - 10
+		DebugPrintln("Starting lock file loop, if the storage dir has lock files that weren't automatically deleted, notifications won't work properly or at all")
+		DebugPrintln("You'll be able to tell it hasn't auto-deleted the lock files when the Y coord goes out of the bounds of the display")
 		for ; ; lockIndex++ {
 			var free bool
 			free, err = lockFree(lockIndex)
@@ -163,9 +166,17 @@ func Notifyf(head uint32, expire time.Duration, onInit func(*gtk.Window),
 
 			y += height
 			y += 10
+			if (y > rects[head].Rect.Max.Y - height - 10) {
+				DebugPrintln("Y coordinate out of bounds, resetting...")
+            	y = height - 10
+			}
+			DebugPrintln(fmt.Sprintf("Y is now %d", y))
 		}
+		DebugPrintln(fmt.Sprintf("top_right is true, Y is %d", y))
 	} else {		
 		y = rects[head].Rect.Max.Y - height - 10
+		DebugPrintln("Starting lock file loop, if the storage dir has lock files that weren't automatically deleted, notifications won't work properly or at all")
+		DebugPrintln("You'll be able to tell it hasn't auto-deleted the lock files when the Y coord goes out of the bounds of the display")
 		for ; ; lockIndex++ {
 			var free bool
 			free, err = lockFree(lockIndex)
@@ -186,12 +197,16 @@ func Notifyf(head uint32, expire time.Duration, onInit func(*gtk.Window),
 			y -= 10
 
 			if y < 0 {
+				DebugPrintln("Y coordinate out of bounds, resetting...")
 				y = rects[head].Rect.Max.Y - height - 10
 			}
+			DebugPrintln(fmt.Sprintf("Y is now %d", y))
 		}
+		DebugPrintln(fmt.Sprintf("top_right is false, Y is %d", y))
 	}
 
 	// Position window in the bottom right corner of the screen
+	DebugPrintln(fmt.Sprintf("Moving window to %d, %d", rects[head].Rect.Max.X-width-10, y))
 	win.Move(rects[head].Rect.Max.X-width-10, y)
 
 	// ghetto way to fix the positioning bug when resizing a pango.ELLIPSIZE_END
