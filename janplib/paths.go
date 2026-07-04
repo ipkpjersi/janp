@@ -58,7 +58,7 @@ func GetStorageDir() (res string, err error) {
 			res = path.Join(GetHome(), cfg.SaveFolder)
 		}
 	} else {
-		res = path.Join(GetHome(), "janp")
+		res = path.Join(GetHome(), "janp", "temp")
 	}
 
 	err = MkDirIfNotExists(res)
