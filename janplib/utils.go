@@ -18,7 +18,6 @@ package janplib
 import (
 	"fmt"
 	"os"
-	"time"
 )
 
 // Println prints the given thext only if silent is false
@@ -49,19 +48,6 @@ func DebugPrintf(format string, a ...interface{}) (n int, err error) {
 	return fmt.Printf(format, a...)
 }
 
-// IsImage determines if a mime type is an image or not
-func IsImage(mimeType string) bool {
-	switch mimeType {
-	case "image/bmp", "image/gif", "image/jpeg", "image/png":
-		return true
-
-	default:
-		return false
-	}
-
-	return false
-}
-
 // FileExists returns true if the given directory or file exists
 func FileExists(path string) (bool, error) {
 	_, err := os.Stat(path)
@@ -87,11 +73,4 @@ func MkDirIfNotExists(dir string) error {
 	}
 
 	return nil
-}
-
-// Returns the current year and month in format "2019-01"
-func GetDate() string {
-	ye := time.Now().Year()
-	mo := time.Now().Month()
-	return fmt.Sprintf("%04d-%02d", ye, int(mo))
 }

@@ -16,13 +16,11 @@
 package janplib
 
 import (
-	"fmt"
 	"github.com/kardianos/osext"
 	"os"
 	"os/user"
 	"path"
 	"strings"
-	"time"
 )
 
 func GetExeDir() (execpath string, err error) {
@@ -63,60 +61,6 @@ func GetStorageDir() (res string, err error) {
 
 	err = MkDirIfNotExists(res)
 	return
-}
-
-// GetArchiveDir returns the absolute path to the archive directory.
-// If "OrganizedFolders" is set to True in config
-// sharenix will create directories in StorageDir in format /2019-02/
-func GetArchiveDir() (res string, err error) {
-	cfg, err2 := LoadConfig()
-
-	if err2 != nil {
-		return
-	}
-
-	organized := cfg.OrganizedFolders
-	DatedFolder := GetDate()
-
-	storage, err := GetStorageDir()
-	if err != nil {
-		return
-	}
-
-	if organized {
-		res = path.Join(storage, DatedFolder)
-	} else {
-		res = path.Join(storage, "archive")
-	}
-
-	err = MkDirIfNotExists(res)
-	return
-}
-
-// GenerateArchivedFilename returns an unique file path inside
-// StorageDir that contains the current date and time
-func GenerateArchivedFilename(extension string) (string, error) {
-	t := time.Now()
-	ye, mo, da := t.Date()
-	hour, min, sec := t.Clock()
-
-	archiveDir, err := GetArchiveDir()
-	if err != nil {
-		return "", err
-	}
-
-	i := 0
-	for {
-		p := path.Join(archiveDir, fmt.Sprintf("%04d-%02d-%02d_%02d-%02d-%02d_%d%s",
-			ye, int(mo), da, hour, min, sec, i, extension))
-		if _, err := os.Stat(p); os.IsNotExist(err) {
-			return p, nil
-		} else if i >= 1000 {
-			return p, fmt.Errorf("Failed to generate unique filename")
-		}
-	}
-
-	return "", fmt.Errorf("This should never happen")
 }
 
 // GetHistoryCSV returns the absolute path to the history csv.
