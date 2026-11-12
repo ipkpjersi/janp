@@ -11,7 +11,6 @@ import (
 
 //Make sure to create ~/.janp.json before running.
 func main() {
-	gtk.Init(nil)
 	onload := func(w *gtk.Window) {
 		fmt.Println("Goroutine is exiting")
 	}
@@ -23,6 +22,8 @@ func main() {
 		}
 		alert = os.Args[1]
 	}
+	// Initialize GTK only after handling --version so it works without a display
+	gtk.Init(nil)
 	cfg, err2 := janplib.LoadConfig()
 	if (err2 != nil) {
 		fmt.Println("Error loading cfg")
